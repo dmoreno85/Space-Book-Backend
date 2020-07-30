@@ -1,11 +1,13 @@
 const UserModel = require('../models/User.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-    const {
-        jwt_auth_secret
-    } = require('../config/keys.js');
+const {
+    jwt_auth_secret
+} = require('../config/keys.js');
+
 
 const UserController = {
+
     async register(req, res) {
         try {
             req.body.password = await bcrypt.hash(req.body.password, 9);
@@ -32,7 +34,7 @@ const UserController = {
                     message: 'Email o contraseña incorrectos.'
                 })
             }
-            const isMatch = bcrypt.compare(req.body.password, user.password);
+            const isMatch = await bcrypt.compare(req.body.password, user.password);
             if (!isMatch) {
                 return res.status(400).send({
                     message: 'Email o contraseña incorrectos'
@@ -41,6 +43,8 @@ const UserController = {
             const token = jwt.sign({
                 _id: user._id
             }, jwt_auth_secret);
+
+            if (user.tokens.length > 4) user.tokens.shift();
             user.tokens.push(token);
             await user.replaceOne(user);
             res.send({
@@ -54,7 +58,18 @@ const UserController = {
                 message: 'Hubo un problema al intentar conectar al usuario.'
             })
         }
-    }
+    },
+    async getAll(req, res) {
+
+        UserModel.find()
+            .then(users => res.send({
+                users
+            }))
+            .catch(console.error)
+
+
+
+    },
 };
 
 module.exports = UserController;

@@ -28,6 +28,4 @@ const authetication = async (req, res, next) => {
     }
 }
 
-module.exports = {
-    authetication
-};
+module.exports = {authetication};

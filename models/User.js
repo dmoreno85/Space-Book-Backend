@@ -19,10 +19,12 @@ const UserSchema = new mongoose.Schema({
             ref: 'User'
         }
     }],
-    timestamps: true,
+
+}, {
+    timestamps: true
 });
 
-UserSchema.methods.toJSON= function (params){
+UserSchema.methods.toJSON = function (params) {
     const user = this._doc;
     delete user.tokens;
     delete user.password;
