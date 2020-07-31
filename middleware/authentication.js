@@ -4,14 +4,16 @@ const {
     jwt_auth_secret
 } = require('../config/keys.js');
 
-const authetication = async (req, res, next) => {
+const authentication = async (req, res, next) => {
     try {
-        const token = req.headers.authorization;
+        const token = req.body.headers.Authorization;
+     
         const payload = jwt.verify(token, jwt_auth_secret);
         const user = await UserModel.findOne({
             _id: payload._id,
             tokens: token
         });
+        
         if (!user) {
             return res.status(401).send({
                 message: "No estas autorizado."
@@ -23,9 +25,10 @@ const authetication = async (req, res, next) => {
         console.error(error);
         res.status(401).send({
             message: 'No estas autorizado.',
-            error
+            error,
+            req
         });
     }
 }
 
-module.exports = {authetication};
+module.exports = authentication;

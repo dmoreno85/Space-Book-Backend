@@ -59,16 +59,16 @@ const UserController = {
             })
         }
     },
-    async getAll(req, res) {
-
+    getAll(req, res) {
         UserModel.find()
-            .then(users => res.send({
-                users
+            .then(allUsers => res.send({
+                allUsers,
+                user: req.user
             }))
-            .catch(console.error)
-
-
-
+            .catch(error => {
+                console.error(error);
+                res.status(500).send(error)
+            })
     },
 };
 
