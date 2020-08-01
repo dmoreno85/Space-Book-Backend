@@ -59,8 +59,8 @@ const UserController = {
             })
         }
     },
-    getAll(req, res) {
-        UserModel.find()
+    async getAll(req, res) {
+        await UserModel.find()
             .then(allUsers => res.send({
                 allUsers,
                 user: req.user
