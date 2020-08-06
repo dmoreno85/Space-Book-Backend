@@ -3,11 +3,14 @@ const Post = require('../models/Post');
 const PostController = {
     getAll(req, res) {
         Post.find()
+        .populate({path:'user',model:'User'})
+      
             .then(async posts => {
-                const allPosts = await Post.find();
+                const allPosts = await Post.find()
                 res.send({
                     posts,
-                    allPosts
+                    allPosts,
+                    
                 })
             })
             .catch(error => {
